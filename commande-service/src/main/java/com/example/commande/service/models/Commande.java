@@ -35,8 +35,9 @@ public class Commande {
     @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate dateLivraison;
     Double montantTotal;
-    String commantaire;
+    String commentaire;
     String personnelId;
+    boolean traitement;
     @OneToMany(cascade = CascadeType.ALL)
     List<ArticleDeCommande> articleDeCommandeList;
 }

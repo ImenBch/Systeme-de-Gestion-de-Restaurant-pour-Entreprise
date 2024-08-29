@@ -23,6 +23,12 @@ public class CommandeController {
         List<CommandePersonnelDto> commandeList = commandeService.getCommandeByPersonnel(personnelId);
         return new ResponseEntity<>(commandeList,HttpStatus.OK);
     }
+    // Endpoints With Restaurant Staff Role
+    @PatchMapping("/restaurantstaff/{id}")
+    public ResponseEntity<CommandeDto> updateTraitement(@PathVariable Long id , @RequestParam boolean traitement){
+        CommandeDto commande=commandeService.updateTraitement(id,traitement);
+        return new ResponseEntity<>(commande,HttpStatus.OK);
+    }
     // Endpoints With Restaurant Staff & Admin Roles
     @GetMapping("/admin-restaurantstaff")
     public ResponseEntity<List<CommandeDto>> getCommandes(){
@@ -41,8 +47,8 @@ public class CommandeController {
         return new ResponseEntity<>(commandeDto, HttpStatus.CREATED);
     }
     @DeleteMapping("/user-restaurantstaff/{id}")
-    public ResponseEntity<String> deleteCommande(@PathVariable("id") Long id){
-        String deleteMsg= commandeService.deleteCommande(id);
-        return new ResponseEntity<>(deleteMsg,HttpStatus.OK);
+    public ResponseEntity<Void> deleteCommande(@PathVariable("id") Long id){
+        commandeService.deleteCommande(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

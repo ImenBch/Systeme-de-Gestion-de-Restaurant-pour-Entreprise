@@ -1,5 +1,6 @@
 package com.example.menu.service.controllers;
 
+import com.example.menu.service.dtos.ArticleDeMenuDto;
 import com.example.menu.service.models.ArticleDeMenu;
 import com.example.menu.service.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +41,20 @@ public class MenuController {
     }
     // Endpoints with Admin role
     @PostMapping(path="/admin",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ArticleDeMenu> postArticleMenu(@RequestParam String nom, @RequestParam String plat, @RequestParam String entree, @RequestParam String description, @RequestParam Double prix, @RequestParam boolean disponibilite, @RequestParam Double evaluation, @RequestPart MultipartFile image) throws IOException {
-        ArticleDeMenu newArticleDeMenu= menuService.postArticleMenu(nom, plat,entree,description,prix,disponibilite,evaluation,image);
+    public ResponseEntity<ArticleDeMenu> postArticleMenu(ArticleDeMenuDto articleDeMenu, @RequestPart MultipartFile image) throws IOException {
+        ArticleDeMenu newArticleDeMenu= menuService.postArticleMenu(articleDeMenu,image);
         return new ResponseEntity<>(newArticleDeMenu, HttpStatus.OK);
     }
+
     @PutMapping(path= "admin/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ArticleDeMenu> updateArticleMenu(@PathVariable("id") Long id,@RequestParam  String nom, @RequestParam String plat,@RequestParam String entree,@RequestParam String description,@RequestParam Double prix,@RequestParam boolean disponibilite,@RequestParam Double evaluation,@RequestPart MultipartFile image) throws IOException {
-        ArticleDeMenu articleDeMenu = menuService.updateArticleMenu(id,nom, plat,entree,description,prix,disponibilite,evaluation,image);
-        return new ResponseEntity<>(articleDeMenu,HttpStatus.OK);
+    public ResponseEntity<ArticleDeMenu> updateArticleMenu(@PathVariable("id") Long id,  ArticleDeMenuDto articleDeMenu,@RequestPart(required = false) MultipartFile image) throws IOException {
+        ArticleDeMenu updatedArticleDeMenu = menuService.updateArticleMenu(id, articleDeMenu,image);
+        return new ResponseEntity<>(updatedArticleDeMenu,HttpStatus.OK);
     }
     @DeleteMapping("admin/{id}")
-    public ResponseEntity<String> deleteArticleMenu( @PathVariable("id") Long id){
-        String deleteMsg= menuService.deleteArticleMenu(id);
-        return new ResponseEntity<>(deleteMsg,HttpStatus.OK);
+    public ResponseEntity<Void> deleteArticleMenu( @PathVariable("id") Long id){
+        menuService.deleteArticleMenu(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     // Endpoints with Restaurant Staff role
     @PatchMapping("/restaurantstaff/{id}/disponibilite")
@@ -61,9 +63,9 @@ public class MenuController {
         return new ResponseEntity<>(articleDeMenu, HttpStatus.OK);
     }
     // Endpoints with User role
-    @PatchMapping("/user/{id}/evaluation")
-    public ResponseEntity<ArticleDeMenu> updateEvaluation(@PathVariable("id") Long id, @RequestParam Double nouvelleEvaluation) {
-        ArticleDeMenu articleDeMenu = menuService.addEvaluation(id,nouvelleEvaluation);
+    @PatchMapping("/user/{id}/addEvaluation")
+    public ResponseEntity<ArticleDeMenu> addEvaluation(@PathVariable("id") Long id, @RequestParam String userId,@RequestParam Double nouvelleEvaluation) {
+        ArticleDeMenu articleDeMenu = menuService.addEvaluation(id,userId,nouvelleEvaluation);
         return new ResponseEntity<>(articleDeMenu, HttpStatus.OK);
     }
 }

@@ -1,0 +1,32 @@
+<mat-toolbar class="custom-toolbar">
+  <div class="button-div">
+    @if(keycloakService.getUserRoles().includes("user")){
+    <button mat-raised-button routerLink="/commandes" >
+      Vos Commandes
+    </button>
+    }
+    @if( keycloakService.getUserRoles().includes("restaurantStaff") ){
+    <button mat-raised-button  [matMenuTriggerFor]="commande">Commandes</button>
+      <mat-menu #commande="matMenu">
+        <button mat-menu-item routerLink="/commandes">Vos Commandes</button>
+        <button mat-menu-item routerLink="/commandeList">Les Commandes</button>
+      </mat-menu>
+    }
+    @if( keycloakService.getUserRoles().includes("admin") ){
+    <button mat-raised-button routerLink="/commandeList">Les Commandes</button>
+    }
+    <button mat-raised-button routerLink="">Menu</button>
+    @if(profile){
+      <button mat-raised-button color="primary" (click)="handleLogout()" >
+        Logout
+      </button>
+      }
+    @else{
+      <button mat-raised-button color="primary" (click)="handleLogin()" >
+      Login
+      </button>
+    }
+
+  </div>
+</mat-toolbar>
+<router-outlet></router-outlet>

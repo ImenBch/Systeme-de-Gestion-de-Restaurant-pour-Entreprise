@@ -1,0 +1,91 @@
+<p-stepper orientation="horizontal" [linear]="true" [(activeStep)]="activeStep" (activeStepChange)="onActiveStepChange($event)" >
+        <p-stepperPanel>
+            <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index" let-active="active">
+                <ng-container *ngIf="active">
+                    <h1>Liste Des Articles</h1>
+                    <div class="flex flex-column h-12rem">
+                        <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                            <p *ngIf="commandeItems.length===0">Ajoutez des articles pour commencer votre commande.</p>
+                            <mat-list>
+                                @for(commandeItem of commandeItems; track commandeItems){
+                                <app-commande-item-card
+                                    [commandeItem]="commandeItem"
+                                    (itemCanceled)="removeCommandeItem($event)"
+                                    (itemUpdated)="updateCommandeItem($event)">
+                                </app-commande-item-card>
+                                }
+                            </mat-list>
+                        </div>
+                    </div>
+                    <div class="flex py-4">
+                        <button mat-flat-button (click)="nextCallback.emit()" color="primary" [disabled]="commandeItems.length===0">Suivant</button>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </p-stepperPanel>
+
+        <p-stepperPanel>
+            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index" let-active="active">
+                <ng-container *ngIf="active">
+                    <h1>Détails</h1>
+                    <div class="flex flex-column h-12rem">
+                        <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium" >
+                            <mat-form-field appearance="outline" style="width:80%">
+                                <mat-label>Date (Obligatoire)</mat-label>
+                                <input matInput [(ngModel)]="selectedDate"
+                                       [min]="minDate"
+                                       [max]="maxDate"
+                                       [matDatepickerFilter]="dateFilter"
+                                       [matDatepicker]="picker"
+                                       (focus)="picker.open()"
+                                       required>
+                                <mat-hint>Pour commander le jour même, veuillez le faire avant 11h.</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="width:100%;margin-top: 60px;margin-bottom: 20px">
+                                <mat-label>Commentaire (Optionnel)</mat-label>
+                                <textarea matInput
+                                          [(ngModel)]="commentaire"
+                                          rows="5"
+                                          cols="30"
+                                          maxlength="100"
+                                          cdkTextareaAutosize>
+                                </textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div id="button-step2" class="flex py-4 gap-2">
+                        <button mat-flat-button (click)="prevCallback.emit()" color="primary">Retour</button>
+                        <button mat-flat-button (click)="nextCallback.emit()" color="primary">Suivant</button>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </p-stepperPanel>
+
+        <p-stepperPanel>
+            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index" let-active="active">
+                <ng-container *ngIf="active">
+                    <h1>Total</h1>
+                    <div class="flex flex-column h-12rem">
+                        <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                            <p>{{total}} TND</p>
+                        </div>
+                        <p style="margin-bottom:20px" *ngIf="selectedDate" >Merci de vous présenter à notre local le {{getFormatedSelectedDate()}} pour récupérer votre commande. </p>
+                        <div *ngIf="!selectedDate" class="warning-msg-container">
+                            <div class="warning-msg-content">
+                                <mat-icon style="color:rgba(239, 68, 68, 1)">report_problem</mat-icon>
+                            </div>
+                            <div class="warning-msg-content">
+                                <p style="margin:0; color:rgba(239, 68, 68, 1)">  Veuillez compléter votre commande avant de la confirmer.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="button-step3" class="flex py-4">
+                        <button mat-flat-button (click)="prevCallback.emit()" color="primary">Retour</button>
+                        <button mat-raised-button (click)="postCommande()" [disabled]="!selectedDate">CONFIRMER MA COMMANDE</button>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </p-stepperPanel>
+</p-stepper>

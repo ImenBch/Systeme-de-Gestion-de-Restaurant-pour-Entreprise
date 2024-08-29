@@ -1,0 +1,7 @@
+.item{
+    display:grid;
+    grid-template-columns: 0.5fr 272px 1fr;
+}
+.quantity-selector, mat-list, .prix-selector{
+    grid-column-end: span 1;
+}

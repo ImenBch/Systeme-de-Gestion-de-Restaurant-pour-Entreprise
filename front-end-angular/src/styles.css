@@ -1,0 +1,18 @@
+html, body { height: 100%;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 4000;
+}
+html{
+  --mdc-switch-track-width:50px
+}
+.mat-mdc-form-field-subscript-wrapper{
+  height:0;
+}
+@media screen and (max-width: 650px) {
+  .content {
+    flex-direction: column;
+    width: max-content;
+  }
+}

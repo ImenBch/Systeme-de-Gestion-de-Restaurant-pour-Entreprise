@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonnelDto {
-        Long id;
-        String nom;
-        String telephone;
+        String firstName;
+        String lastName;
+        String email;
 }

@@ -1,10 +1,7 @@
 package com.example.menu.service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import lombok.experimental.FieldDefaults;
 import lombok.Setter;
@@ -12,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Setter
@@ -35,4 +35,7 @@ public class ArticleDeMenu {
     Double sommeEvaluation= 0.0;
     @JsonIgnore
     int nombreEvaluation = 0;
+    @JsonIgnore
+    @ElementCollection
+    private Map<String, Double> userEvaluations = new HashMap<>(); // Clé : userId, Valeur : évaluation
 }

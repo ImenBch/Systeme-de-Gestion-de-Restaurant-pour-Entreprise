@@ -21,5 +21,6 @@ public class CommandeDetailDto {
     @JsonFormat(pattern = "dd/MM/yyyy")
     Date dateLivraison;
     Double montantTotal;
-    String commantaire;
+    String commentaire;
+    boolean traitement;
 }

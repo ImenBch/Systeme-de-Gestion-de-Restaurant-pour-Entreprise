@@ -1,0 +1,26 @@
+<button mat-icon-button id="cancel-button" mat-dialog-close><mat-icon>close</mat-icon></button>
+<div>
+  <img src="http://localhost:8080/images/{{menuItem!.image}}" alt="menuItem image">
+</div>
+<mat-card-header>
+  <mat-card-title>{{menuItem?.nom}}</mat-card-title>
+  <mat-card-subtitle>
+    <p-rating class="p-rating-star" [(ngModel)]="menuItem!.evaluation" [readonly]="true" [cancel]="false" [disabled]="true" />  {{menuItem!.serverEvaluation}}/5<br>
+  </mat-card-subtitle>
+  <mat-card-subtitle>Entrée: {{menuItem?.entree}}<br>Plat: {{menuItem?.plat}}</mat-card-subtitle>
+</mat-card-header>
+<mat-card-content>
+  {{menuItem!.description}}
+</mat-card-content>
+<mat-card-actions>
+  <div class="quantity-selector">
+    <button mat-icon-button color="primary" (click)="decQuantity()" [disabled]="quantity===1"><mat-icon>remove_circle_outline</mat-icon></button>
+    <p>{{quantity}}</p>
+    <button mat-icon-button color="primary" (click)="incQuantity()" [disabled]="quantity>6"><mat-icon>add_circle_outline</mat-icon></button>
+  </div>
+  <div >
+    <button mat-flat-button color="primary" (click)="handleCommande()" style="width:305px">
+      AJOUTER À MA COMMANDE: {{menuItem!.prix * quantity}} TND
+    </button>
+  </div>
+</mat-card-actions>

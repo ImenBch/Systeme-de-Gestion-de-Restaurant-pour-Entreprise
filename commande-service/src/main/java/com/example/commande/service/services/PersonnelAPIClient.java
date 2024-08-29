@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name="Personnel-service")
 public interface PersonnelAPIClient {
-    @GetMapping("/personnel/admin/{id}")
-    PersonnelDto getPersonnelById(@PathVariable("id") String id );
+    @GetMapping("/users/{id}")
+    PersonnelDto getUserById(@PathVariable("id") String id );
 }

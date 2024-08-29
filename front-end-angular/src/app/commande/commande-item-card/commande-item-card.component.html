@@ -1,0 +1,17 @@
+<div class="item">
+    <div class="quantity-selector">
+        <span>{{commandeItem.quantity}}</span>
+    </div>
+    <mat-list>
+        <mat-list-item>
+            <span matListItemTitle>{{commandeItem.nom}}</span>
+            <span matListItemLine>Entrée: {{commandeItem.entree}}</span>
+            <span matListItemLine>Plat: {{commandeItem.plat}}</span>
+        </mat-list-item>
+        <button mat-button (click)="handleEditCommandeItem()">Modifier</button>
+        <button mat-button (click)="handleCancelCommandeItem()">Annuler</button>
+    </mat-list>
+    <div class="prix-selector">
+        <span>{{getTotalPrix()}} TND</span>
+    </div>
+</div>

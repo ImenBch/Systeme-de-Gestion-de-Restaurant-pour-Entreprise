@@ -1,0 +1,11 @@
+.button-div{
+  width: 500px;
+  min-width:400px;
+  display:flex;
+  justify-content: space-evenly;
+}
+.custom-toolbar {
+  background-color: #ffffff;
+  justify-content: flex-end;
+  padding: 0 10% 0 10%;
+}

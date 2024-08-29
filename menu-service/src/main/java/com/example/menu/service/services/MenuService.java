@@ -28,59 +28,55 @@ public class MenuService {
         return menuRepository.findAll();
     }
     public ArticleDeMenu getArticleMenuById(Long id) {
-            return menuRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
+        return menuRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
     public ArticleDeMenu getArticleMenuByNom(String nom){
         return  menuRepository.findByNom(nom);
     }
-    public  ArticleDeMenu postArticleMenu(String nom, String plat,String entree,String description,Double prix,boolean disponibilite,Double evaluation, MultipartFile image) throws IOException {
-        if(menuRepository.existsArticleDeMenuByNom(nom)){
-            throw new AlreadyExistException(nom);
+    public  ArticleDeMenu postArticleMenu(ArticleDeMenuDto articleDeMenu, MultipartFile image) throws IOException {
+        if(menuRepository.existsArticleDeMenuByNom(articleDeMenu.getNom())){
+            throw new AlreadyExistException(articleDeMenu.getNom());
         }
-        if (evaluation < 0 || evaluation > 10) {
-            throw new IllegalEvaluationException("L'évaluation doit être comprise entre 0 et 10.");
-        }
-        ArticleDeMenuDto articleDeMenuDto = new ArticleDeMenuDto(nom,plat,entree,description,prix,disponibilite,evaluation);
-        ArticleDeMenu newArticleDeMenu= articleDeMenuMapper.fromDto(articleDeMenuDto);
+        articleDeMenu.setEvaluation(0.0); // evaluation par defaut
+        ArticleDeMenu newArticleDeMenu= articleDeMenuMapper.fromDto(articleDeMenu);
         // save the image
         saveImage(image,newArticleDeMenu);
         return menuRepository.save(newArticleDeMenu);
     }
-
-    public ArticleDeMenu updateArticleMenu (Long id,String nom, String plat,String entree,String description,Double prix,boolean disponibilite,Double evaluation, MultipartFile image) throws IOException {
-        ArticleDeMenu articleDeMenu = menuRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        if(menuRepository.existsArticleDeMenuByNom(nom) && !nom.equalsIgnoreCase(articleDeMenu.getNom())){
-            throw new AlreadyExistException(nom);
+    public ArticleDeMenu updateArticleMenu (Long id, ArticleDeMenuDto articleDeMenu, MultipartFile image) throws IOException {
+        ArticleDeMenu updatedArticleDeMenu = menuRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        if(menuRepository.existsArticleDeMenuByNom(articleDeMenu.getNom()) && !articleDeMenu.getNom().equalsIgnoreCase(updatedArticleDeMenu.getNom())){
+            throw new AlreadyExistException(articleDeMenu.getNom());
         }
-        if (evaluation < 0 || evaluation > 10) {
-            throw new IllegalEvaluationException("L'évaluation doit être comprise entre 0 et 10.");
+        articleDeMenuMapper.fromDto(articleDeMenu,updatedArticleDeMenu);
+        if(image != null && !image.isEmpty()){
+            saveImage(image,updatedArticleDeMenu);
         }
-        ArticleDeMenuDto articleDeMenuDto = new ArticleDeMenuDto(nom,plat,entree,description,prix,disponibilite,evaluation);
-        articleDeMenuMapper.fromDto(articleDeMenuDto,articleDeMenu);
-        saveImage(image,articleDeMenu);
-        return menuRepository.save(articleDeMenu);
+        return menuRepository.save(updatedArticleDeMenu);
     }
     public ArticleDeMenu updateDisponibilite (Long id, boolean nouvelleDisponibilite){
         ArticleDeMenu articleDeMenu = menuRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
         articleDeMenu.setDisponibilite(nouvelleDisponibilite);
         return menuRepository.save(articleDeMenu);
     }
-    public ArticleDeMenu addEvaluation(Long id, Double newEvaluation) {
+    public ArticleDeMenu addEvaluation(Long id,String userId, Double newEvaluation) {
         ArticleDeMenu article = menuRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
-        if (newEvaluation < 0 || newEvaluation > 10) {
-            throw new IllegalEvaluationException("L'évaluation doit être comprise entre 0 et 10.");
+        if (newEvaluation < 0 || newEvaluation > 5) {
+            throw new IllegalEvaluationException("L'évaluation doit être comprise entre 0 et 5.");
         }
-        article.setSommeEvaluation(article.getSommeEvaluation() + newEvaluation);
-        article.setNombreEvaluation(article.getNombreEvaluation() + 1);
+        Double previousEvaluation = article.getUserEvaluations().getOrDefault(userId, 0.0);
+        article.setSommeEvaluation(article.getSommeEvaluation() - previousEvaluation + newEvaluation);
+        article.setNombreEvaluation(article.getNombreEvaluation() - (previousEvaluation > 0 ? 1 : 0) + 1);
         article.setEvaluation(article.getSommeEvaluation() / article.getNombreEvaluation());
+        article.getUserEvaluations().put(userId, newEvaluation);
         return menuRepository.save(article);
     }
-    public String deleteArticleMenu(Long id){
+
+    public void deleteArticleMenu(Long id){
         if(!menuRepository.existsById(id)){
             throw new NotFoundException(id);
         }
         menuRepository.deleteById(id);
-        return "Article supprimé";
     }
     public ArticleDeMenu getMostEvaluatedArticle(){
         return menuRepository.findMostEvaluated();
@@ -94,6 +90,6 @@ public class MenuService {
         String uniqueImageName = UUID.randomUUID() + "_" + originalImageName;
         Path imagePath = Paths.get(System.getProperty("user.home"), "menu-app-images", "images", uniqueImageName);
         Files.copy(image.getInputStream(), imagePath);
-        articleDeMenu.setImage(imagePath.toUri().toString());
+        articleDeMenu.setImage(uniqueImageName);
     }
 }

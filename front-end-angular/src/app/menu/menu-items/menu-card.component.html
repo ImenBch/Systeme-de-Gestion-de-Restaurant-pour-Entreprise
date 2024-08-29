@@ -1,0 +1,35 @@
+<div id="menu-items-container" *ngIf="menu">
+    <p-sidebar  [(visible)]="sidebarVisible" position="right" [style]="{width: '30rem'}">
+        <ng-template pTemplate="header">
+            <div>
+                <h2>Ma Commande</h2>
+                <p>{{profileName}}</p>
+            </div>
+        </ng-template>
+      <app-commande [(commandeItems)]="commandeItems" (slideBarStat)="handleSidebarVisible($event)"></app-commande>
+    </p-sidebar>
+
+    <div class="action-button" *ngIf="keyCloakService.getUserRoles().includes('admin')">
+        <button mat-fab color="primary" (click)="openAddDialog()">
+            <mat-icon>add_circle_outline</mat-icon>
+        </button>
+    </div>
+    <div class="action-button" *ngIf="!keyCloakService.getUserRoles().includes('admin')">
+      <button mat-fab color="primary" (click)="sidebarVisible=true">
+        <mat-icon>shopping_basket</mat-icon>
+      </button>
+    </div>
+
+    <h1 class="mat-headline-4">Le Menu</h1>
+    <h3 class="mat-headline-6">Notre menu vous offre une expérience gastronomique unique et raffinée, commandez maintenant!</h3>
+    <div class="menu-item">
+        <!--for loop-->
+        @for(menuItem of menu; track menu){
+            <app-menu-item-card
+                [menuItem]="menuItem"
+                (itemDeleted)="removeItem($event)"
+                (slideBarCommande)="handleSlideBarCommande($event)">
+            </app-menu-item-card>
+       }
+    </div>
+</div>

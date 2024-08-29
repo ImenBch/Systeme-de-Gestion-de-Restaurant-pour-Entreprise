@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.commande.service.models.Commande;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,6 @@ public class CommandeService {
     private MenuAPIClient menuAPIClient;
     @Autowired
     CommandeMapper commandeMapper;
-
     public CommandeDto saveCommande(CommandeCreationDTO commande) {
         Double montantTotal = commande.getArticleDeCommandeList().stream()
                 .mapToDouble(article -> {
@@ -34,6 +34,7 @@ public class CommandeService {
         Commande newCommande = commandeMapper.FromCommandeCreationDto(commande);
         newCommande.setMontantTotal(montantTotal);
         newCommande.setDateCommande(Instant.now());
+        newCommande.setTraitement(false);
         return  convertToCommandeDto(commandeRepository.save(newCommande));
     }
     public List<CommandeDto> getCommandes(){
@@ -41,30 +42,32 @@ public class CommandeService {
                 .map(this::convertToCommandeDto)
                 .collect(Collectors.toList());
     }
-
     public CommandeDto getCommandeById(Long commandeId) {
         Commande commande = commandeRepository.findById(commandeId).orElseThrow(()-> new NotFoundException(commandeId));
         return convertToCommandeDto(commande);
     }
     public List<CommandePersonnelDto> getCommandeByPersonnel(String personnelId){
         if(!commandeRepository.existsCommandeByPersonnelId(personnelId)){
-            throw new NotFoundException(personnelId);
+            return new ArrayList<>();
         }
         return commandeRepository.findByPersonnelId(personnelId).stream()
                 .map(this::convertToCommandePersonnelDto)
                 .collect(Collectors.toList());
     }
-    public String deleteCommande (Long id){
+    public CommandeDto updateTraitement(Long commandeId, boolean traitement){
+        Commande commande = commandeRepository.findById(commandeId).orElseThrow(() -> new NotFoundException(commandeId));
+        commande.setTraitement(traitement);
+        return convertToCommandeDto(commandeRepository.save(commande));
+    }
+    public void deleteCommande (Long id){
         if(!commandeRepository.existsById(id)){
             throw new NotFoundException(id);
         }
         commandeRepository.deleteById(id);
-        return "Commande annulée";
     }
-
     private CommandeDto convertToCommandeDto(Commande commande) {
         CommandeDetailDto commandeDetailDto = commandeMapper.toCommandeDetailDto(commande);
-        PersonnelDto personnelDto = personnelAPIClient.getPersonnelById(commande.getPersonnelId());
+        PersonnelDto personnelDto = personnelAPIClient.getUserById(commande.getPersonnelId());
 
         List<ArticleDeCommandeDto> articleDeCommandeDtoList = commande.getArticleDeCommandeList().stream()
                 .map(this::convertToArticleDeCommandeDto)

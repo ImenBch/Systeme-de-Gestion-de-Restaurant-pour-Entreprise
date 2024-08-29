@@ -1,0 +1,42 @@
+<div class="card-container">
+    <mat-card class="example-card">
+        <div class="img-container">
+            <img src="http://localhost:8080/images/{{menuItem.image}}" alt="menuItem image">
+        </div>
+        <div class="content-container">
+        <mat-card-header>
+            <mat-card-title>{{menuItem.nom}}</mat-card-title>
+            <mat-card-subtitle>Entrée: {{menuItem.entree}}<br>Plat: {{menuItem.plat}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p-rating class="p-rating-star" [(ngModel)]="menuItem.evaluation" [readonly]="!this.keycloakService.getUserRoles().includes('user')" [cancel]="false" (onRate)="addEvaluationMenuItem()" />  {{menuItem.serverEvaluation}}/5<br>
+
+            <mat-slide-toggle *ngIf="this.keycloakService.getUserRoles().includes('restaurantStaff'); else disponibilityTag"
+                    class="example-margin"
+                    [checked]="menuItem.disponibilite"
+                    (change)="toggleDisponibiliteMenuItem($event)" >
+                {{updateDisponibiliteMsg()}}
+            </mat-slide-toggle>
+            <ng-template #disponibilityTag>
+                <p-tag [severity]="updateTagSeverity()" [value]="updateDisponibiliteMsg()" />
+            </ng-template>
+
+        </mat-card-content>
+        <mat-card-actions style="padding-left: 16px;justify-content: space-between;">
+            <p class="mat-h2" style="margin: 0"> {{menuItem.prix}} TND</p>
+            @if(!this.keycloakService.getUserRoles().includes('admin')){
+            <button mat-button (click)="openDetailDialog()" [disabled]="!menuItem.disponibilite">COMMANDER</button>
+            }@else{
+            <div>
+                <button mat-button (click)="openUpdateDialog()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button (click)="openDeleteDialog()">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+            }
+        </mat-card-actions>
+        </div>
+    </mat-card>
+</div>

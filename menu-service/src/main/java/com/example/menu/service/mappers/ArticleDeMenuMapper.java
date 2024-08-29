@@ -9,5 +9,4 @@ import org.mapstruct.MappingTarget;
 public interface ArticleDeMenuMapper {
     ArticleDeMenu fromDto(ArticleDeMenuDto articleDeMenuDto);
     void fromDto(ArticleDeMenuDto dto, @MappingTarget ArticleDeMenu entity);
-
 }

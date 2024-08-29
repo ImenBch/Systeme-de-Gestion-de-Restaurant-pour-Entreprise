@@ -1,0 +1,19 @@
+<div class="table-container">
+    <table mat-table [dataSource]="commandeItemList">
+        <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef> Article sélectionné </th>
+            <td mat-cell *matCellDef="let commandeItem"> {{commandeItem.articleDeMenuDto.nom}} </td>
+            <td mat-footer-cell *matFooterCellDef> Total </td>
+        </ng-container>
+
+        <ng-container matColumnDef="prix">
+            <th mat-header-cell *matHeaderCellDef> Prix </th>
+            <td mat-cell *matCellDef="let commandeItem">  {{commandeItem.quantite}} x {{commandeItem.articleDeMenuDto.prix}} TND</td>
+            <td mat-footer-cell *matFooterCellDef> {{commande.commandeDetailDto.montantTotal}} TND</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+    </table>
+</div>

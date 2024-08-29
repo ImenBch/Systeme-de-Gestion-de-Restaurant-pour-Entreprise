@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{isUpdateMode ? "Modifier Cet Article De Menu": "Ajouter Un Article De Menu"}}</h2>
+<mat-dialog-content>
+    <form class="example-form"  [formGroup]="menuItemFormGroup">
+
+        <mat-form-field >
+            <mat-label>Nom</mat-label>
+            <input matInput #input1 maxlength="32" formControlName="nom" placeholder="Ex. Risotto à la viande hachée">
+            <mat-hint align="end">{{input1.value.length}}/32</mat-hint>
+            <mat-error *ngIf="menuItemFormGroup.get('nom')?.hasError('required')"> Le nom est <strong>requis</strong>.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Entrée</mat-label>
+            <input matInput #input2 maxlength="32" formControlName="entree" placeholder="Ex. Salade verte">
+            <mat-hint align="end">{{input2.value.length}}/32</mat-hint>
+            <mat-error *ngIf="menuItemFormGroup.get('entree')?.hasError('required')"> Le nom de l'entrée est <strong>requis</strong>.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Plat</mat-label>
+            <input matInput #input3 maxlength="32" formControlName="plat" placeholder="Ex. Rissotto">
+            <mat-hint align="end">{{input3.value.length}}/32</mat-hint>
+            <mat-error *ngIf="menuItemFormGroup.get('plat')?.hasError('required')"> Le nom du plat est <strong>requis</strong>.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput #input4 maxlength="200" formControlName="description" placeholder="Ex. Accompagné d'une salade verte fraîche et croquante, le risotto à la viande hachée est ... "></textarea>
+            <mat-hint align="end">{{input4.value.length}}/200</mat-hint>
+            <mat-error *ngIf="menuItemFormGroup.get('description')?.hasError('required')"> La description est <strong>requise</strong>.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Prix</mat-label>
+            <input matInput formControlName="prix">
+            <mat-error *ngIf="menuItemFormGroup.get('prix')?.hasError('required')"> Le prix est <strong>requis</strong>.</mat-error>
+            <mat-error *ngIf="menuItemFormGroup.get('prix')?.hasError('pattern')"> Le prix doit être un <strong>chiffre</strong>.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Image</mat-label>
+            <button type="button" mat-icon-button matPrefix  (click)="f_input.click()" ><mat-icon>add_photo_alternate</mat-icon></button>
+            <input matInput readonly formControlName="imageName">
+            <input type="file" hidden #f_input (change)="selectFile($event)" >
+                    <mat-error *ngIf="menuItemFormGroup.get('image')?.hasError('required')"> L'image est <strong>requise</strong>.</mat-error>
+        </mat-form-field>
+        <mat-checkbox *ngIf="!isUpdateMode" formControlName="disponibilite" color="primary">Disponibilité</mat-checkbox>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>ANNULER</button>
+    <button mat-button (click)="submit()" >{{isUpdateMode? "MODIFIER" : "AJOUTER"}}</button>
+</mat-dialog-actions>

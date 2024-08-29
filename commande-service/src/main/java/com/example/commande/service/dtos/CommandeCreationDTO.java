@@ -19,7 +19,7 @@ import java.util.List;
 public class CommandeCreationDTO {
     @JsonFormat(pattern = "dd/MM/yyyy")
     Date dateLivraison;
-    String commantaire;
+    String commentaire;
     String personnelId;
     List<ArticleDeCommandeCreationDto> articleDeCommandeList;
 }

@@ -1,0 +1,68 @@
+<div class="card" *ngIf=" commandeList; else skeleton">
+    <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="commandeList.length"/>
+    <p-accordion [activeIndex]="0" [multiple]="true">
+        <p-accordionTab  *ngFor="let commande of paginatedItems" [selected]="false">
+            <ng-template pTemplate="header">
+                <div class="header-container">
+                    <p> Commande #{{commande.commandeDetailDto.id}}</p>
+                    <div class="header-tag">
+                        <p-tag *ngIf="commande.commandeDetailDto.traitement" severity="success" value="traitée"/>
+                        <p-tag *ngIf="!commande.commandeDetailDto.traitement" severity="info" value="en attente"/>
+                        <p>Effectuée le {{commande.commandeDetailDto.dateCommande}}</p>
+                    </div>
+                </div>
+            </ng-template>
+            <app-commande-items [commande]="commande"></app-commande-items>
+            <p>Commentaire: {{commande.commandeDetailDto.commentaire ? commande.commandeDetailDto.commentaire : "Aucun commentaire n'a été fourni" }}</p>
+            <div class="commande-footer">
+                <div>
+                    <p>Date de la commande : {{commande.commandeDetailDto.dateLivraison}}</p>
+                    <div class="warning-msg-container" style=" gap: 0; height:25px;">
+                        <div class="warning-msg-content">
+                            <mat-icon style="color:rgba(239, 68, 68, 1); font-size: 20px; ">report_problem</mat-icon>
+                        </div>
+                        <div class="warning-msg-content">
+                            <p style="margin:0; color:rgba(239, 68, 68, 1)" class="mat-small"> Toute annulation le jour de la commande doit être réalisée avant 11h, avant le début du traitement de la commande.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-left">
+                    <button mat-raised-button (click)="handleCancelCommande(commande)" [disabled]="commande.commandeDetailDto.traitement">
+                        <mat-icon>delete_outline</mat-icon>
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+    <ng-container  *ngIf="commandeList.length===0">
+        <div style="height:70vh" class="warning-msg-content">
+            <p>Vous n'avez effectué aucune commande jusqu'à présent.</p>
+        </div>
+    </ng-container>
+</div>
+<ng-template #skeleton>
+    <div class="card">
+        <p-paginator
+                (onPageChange)="onPageChange($event)"
+                [first]="0"
+                [rows]="1"/>
+        <p-accordion [activeIndex]="0" [multiple]="true">
+            <p-accordionTab  *ngFor="let i of [0, 1, 2, 3, 4, 5]" [selected]="false">
+                <ng-template pTemplate="header">
+                    <div class="header-container">
+                        <p class="text-skeleton"> Commande #<p-skeleton width="25px"/></p>
+                        <div class="header-tag">
+                            <p-skeleton width="54px" height="26px"/>
+                            <p class="text-skeleton">Effectuée le <p-skeleton width="200px"/> </p>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-accordionTab>
+        </p-accordion>
+    </div>
+</ng-template>

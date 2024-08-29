@@ -10,5 +10,5 @@ import java.util.List;
 @FeignClient(name="commande-service")
 public interface CommandeAPIClient {
     @GetMapping("/commandes/personnel/{personnelId}")
-    List<CommandePersonnelDto> getHistoriqueCommandeById(@PathVariable Long personnelId);
+    List<CommandePersonnelDto> getHistoriqueCommandeById(@PathVariable String personnelId);
 }

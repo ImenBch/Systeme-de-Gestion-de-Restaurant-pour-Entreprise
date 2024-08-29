@@ -22,4 +22,5 @@ public class CommandeDetailDto {
     Date dateLivraison;
     Double montantTotal;
     String commantaire;
+    boolean traitement;
 }

@@ -5,6 +5,6 @@ public class NotFoundException extends RuntimeException {
         super ("Aucune commande trouvée avec l'ID : "+ id);
     }
     public NotFoundException(String personnelId) {
-        super ("Aucune personnel trouvée avec l'ID : "+ personnelId);
+        super ("Aucun personnel trouvé avec l'ID : "+ personnelId);
     }
 }

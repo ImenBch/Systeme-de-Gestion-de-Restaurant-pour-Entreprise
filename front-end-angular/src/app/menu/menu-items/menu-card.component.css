@@ -1,0 +1,39 @@
+#menu-items-container{
+    padding: 5% 10%;
+}
+.menu-item{
+    display: grid;
+    grid-template-columns: repeat(12, minmax(auto, 60px));
+    grid-gap: 40px;
+}
+app-menu-item-card{
+    grid-column-end: span 4;
+}
+.mat-headline-4{
+    margin-bottom: 10px;
+}
+h3{
+    margin-bottom: 30px;
+}
+.action-button{
+    display:flex;
+    justify-content: flex-end;
+}
+.w-30rem {
+    width: 30rem;
+}
+@media only screen and (max-width: 1000px) {
+    app-menu-item-card {
+        grid-column-end: span 6;
+    }
+}
+@media only screen and (max-width: 800px) {
+    .menu-item {
+        grid-column: 2 / span 6;
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 20px;
+    }
+    app-menu-item-card {
+        grid-column-end: span 6;
+    }
+}
