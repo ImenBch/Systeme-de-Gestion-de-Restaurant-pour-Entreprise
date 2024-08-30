@@ -44,7 +44,7 @@
             <input type="file" hidden #f_input (change)="selectFile($event)" >
                     <mat-error *ngIf="menuItemFormGroup.get('image')?.hasError('required')"> L'image est <strong>requise</strong>.</mat-error>
         </mat-form-field>
-        <mat-checkbox *ngIf="!isUpdateMode" formControlName="disponibilite" color="primary">Disponibilité</mat-checkbox>
+        <mat-checkbox *ngIf="!isUpdateMode" formControlName="disponibilite" color="primary" style="margin-top:20px">Disponibilité</mat-checkbox>
 
     </form>
 </mat-dialog-content>
