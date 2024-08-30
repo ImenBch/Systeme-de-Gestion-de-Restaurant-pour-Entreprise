@@ -26,11 +26,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/menu/admin/**","personnel/admin/**").hasRole("admin")
 
-                .requestMatchers("/commandes/user-restaurantstaff/**").hasAnyRole("user","restaurantStaff")
+                .requestMatchers("/commandes/user-restaurantstaff/**","/users/**").hasAnyRole("user","restaurantStaff")
                 .requestMatchers(("/commandes/admin-restaurantstaff/**")).hasAnyRole("admin","restaurantStaff")
 
                 .requestMatchers("/menu/restaurantstaff/**","/commandes/restaurantstaff/**").hasRole("restaurantStaff")
-                .requestMatchers("/menu/user/**","/users/**").hasRole("user")
+                .requestMatchers("/menu/user/**").hasRole("user")
 
                 .requestMatchers("/menu","/menu/*","/images/*").permitAll()
                 .anyRequest().authenticated());
