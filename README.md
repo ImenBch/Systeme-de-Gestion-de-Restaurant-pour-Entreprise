@@ -30,9 +30,11 @@ This is a web application project developed during a summer internship. The appl
 - Security:
   
   [![Keycloak][Keycloak.io]][Keycloak-url]
+## Architecture
+![Architecture Microservice](images/Architecture_MS.png)
 ## Preview
 Below is the homepage that will be displayed when accessing the web application.
-![OfficeEats](images/ApplicationPreview.png)
+![OfficeEats](images/Application_Preview.png)
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
